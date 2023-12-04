@@ -16,7 +16,8 @@ function process(data) {
     let sum = 0;
     for (let line of lines) {
         let id = Number.parseInt(line.slice(5,line.indexOf(":")));
-        let possible = true;
+        // let possible = true;
+        let minCount = [0, 0, 0]; // red, green, blue
         let games = line.slice(line.indexOf(":")+1).split(";");
         for (let game of games) {
             let pulls = game.split(",");
@@ -24,16 +25,20 @@ function process(data) {
                 let count = Number.parseInt(pull.slice(0,pull.lastIndexOf(" ")));
                 for (let idx in colors) {
                     if (pull.indexOf(colors[idx][0]) > 0) {
-                        if (count > colors[idx][1]) {
-                            possible = false;
+                        // if (count > colors[idx][1]) {
+                        //     possible = false;
+                        // }
+                        if (minCount[idx] < count) {
+                            minCount[idx] = count;
                         }
                     }
                 }
             }
         }
-        if (possible) {
-            sum += id;
-        }
+        // if (possible) {
+        //     sum += id;
+        // }
+        sum += minCount.reduce((accumulator, currentValue) => accumulator * currentValue);
 
     }
     console.log(sum);
